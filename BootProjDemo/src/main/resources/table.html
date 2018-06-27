@@ -36,7 +36,7 @@
     <tr>
 	    <th data-field="state" data-checkbox="true"></th>
         <th data-field="status">status</th>
-        <th data-field="name">Name</th>
+        <th data-field="name"  data-formatter="formatInput">Name</th>
         <th data-field="stargazers_count">Stars</th>
         <th data-field="forks_count">Forks</th>
         <th data-field="description">Description</th>
@@ -88,6 +88,9 @@ $(function () {
         data: data
     });
 });
+function formatInput(value,row,index){
+   return '<input data-id="' + row.id + '" value="' + value+ row.name+ '">';
+}
 </script>
 </body>
 </html>
