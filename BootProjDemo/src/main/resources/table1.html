@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bootstrap-table.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="bootstrap-table.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="bootstrap-select.css">
+  <script src="bootstrap-select.js"></script>
+</head>
+<body>
+
+<div class="container">
+ <table id="table"
+       data-toolbar="#toolbar"
+	   data-data-field=""
+       data-search="true"
+       data-show-refresh="true"
+       data-show-toggle="true"
+       data-show-columns="true"
+       data-show-export="true"
+       data-detail-view="true"
+       data-detail-formatter="detailFormatter"
+       data-minimum-count-columns="2"
+       data-show-pagination-switch="true"
+       data-pagination="true"
+       data-id-field="id"
+       data-page-list="[5,10, 25, 50, 100, ALL]"
+       data-response-handler="responseHandler">
+    <thead>
+    <tr>
+	    <th data-field="state" data-checkbox="true"></th>
+        <th data-field="status">status</th>
+        <th data-field="name"  data-formatter="formatSelect">Name</th>
+        <th data-field="stargazers_count" data-formatter="formatSelect">Stars</th>
+        <th data-field="forks_count">Forks</th>
+        <th data-field="description">Description</th>
+    </tr>
+    </thead>
+</table>
+</div>
+<script>
+var data = [
+    {
+        "name": "bootstrap-table",
+	    "status": "<i class='fa fa-check' aria-hidden='true'></i>",
+        "stargazers_count": "526",
+        "forks_count": "<a>asd</a>",
+        "description": "An extended Bootstrap table with radio, checkbox, sort, pagination, and other added features. (supports twitter bootstrap v2 and v3) "
+    },
+    {
+        "name": "multiple-select",
+		"status": "<i class='fa fa-times' aria-hidden='true'></i>",
+        "stargazers_count": "288",
+        "forks_count": "150",
+        "description": "A jQuery plugin to select multiple elements with checkboxes :)"
+    },
+    {
+        "name": "bootstrap-show-password",
+		"status": "<i class='fa fa-hourglass-end' aria-hidden='true'></i>",
+        "stargazers_count": "32",
+        "forks_count": "11",
+        "description": "Show/hide password plugin for twitter bootstrap."
+    },
+    {
+        "name": "blog",
+		"status": "<i class='fa fa-check' aria-hidden='true'></i>",
+        "stargazers_count": "13",
+        "forks_count": "4",
+        "description": "my blog"
+    },
+    {
+        "name": "scutech-redmine",
+		"status": "<i class='fa-check-circle-o' aria-hidden='true'></i>",
+        "stargazers_count": "6",
+        "forks_count": "3",
+        "description": "Redmine notification tools for chrome extension."
+    },    {
+        "name": "bootstrap-table",
+	    "status": "<i class='fa fa-check' aria-hidden='true'></i>",
+        "stargazers_count": "526",
+        "forks_count": "<a>asd</a>",
+        "description": "An extended Bootstrap table with radio, checkbox, sort, pagination, and other added features. (supports twitter bootstrap v2 and v3) "
+    },
+    {
+        "name": "multiple-select",
+		"status": "<i class='fa fa-times' aria-hidden='true'></i>",
+        "stargazers_count": "288",
+        "forks_count": "150",
+        "description": "A jQuery plugin to select multiple elements with checkboxes :)"
+    },
+    {
+        "name": "bootstrap-show-password",
+		"status": "<i class='fa fa-hourglass-end' aria-hidden='true'></i>",
+        "stargazers_count": "32",
+        "forks_count": "11",
+        "description": "Show/hide password plugin for twitter bootstrap."
+    },
+    {
+        "name": "blog",
+		"status": "<i class='fa fa-check' aria-hidden='true'></i>",
+        "stargazers_count": "13",
+        "forks_count": "4",
+        "description": "my blog"
+    },
+    {
+        "name": "scutech-redmine",
+		"status": "<i class='fa-check-circle-o' aria-hidden='true'></i>",
+        "stargazers_count": "6",
+        "forks_count": "3",
+        "description": "Redmine notification tools for chrome extension."
+    }
+];
+    $('#table').bootstrapTable({
+        data: data
+    });
+	
+	$('#table').on('page-change.bs.table',function(e,number, size){
+        
+	   $('.selectpicker').selectpicker('refresh');
+    });
+	
+	function formatInput(value,row,index){
+	   return '<input data-id="' + row.id + '" value="' + value+ row.name+ '">';
+	}
+	
+   function formatSelect(value,row,index){
+    alert(this.field+''+index);
+    return '<select id="'+this.field+''+index+'" onchange="myFunction(this.id)" class="selectpicker" data-live-search="true" data-live-search-style="begins" title="Please select a lunch ..."><option value="volvo">Volvo</option><option value="saab">Saab</option></select>';
+   }
+   
+   function myFunction(index){
+        alert( String(index));
+   }
+</script>
+</body>
+</html>
