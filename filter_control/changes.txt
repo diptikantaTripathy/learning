@@ -1,0 +1,9 @@
+$('#table').bootstrapTable({
+         data: data,
+         onPostBody: function () {
+		      $('.selectpicker').selectpicker('refresh');
+         },
+         onPageChange: function (number, size ) {
+           $('.selectpicker').selectpicker('refresh'); 
+         }
+}); 
