@@ -794,3 +794,168 @@ filter
 </body>
 
 </html>
+================================
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TICKETING LOCATION</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+ 
+  <link rel="stylesheet" href="css/bootstrap-select.css">
+  <script src="js/bootstrap-select.js"></script>
+  
+  <link rel="stylesheet" href="css/bootstrap-table.min.css">
+  <script src="js/bootstrap-table.min.js"></script> 
+	
+  <script src="js/bootstrap-table-filter-control.js"></script>
+	
+</head>
+<body>
+<div class="container">
+    <h1>Filter Control</h1>
+    <table id="table"
+              
+      data-detail-view="true"
+      data-minimum-count-columns="2"
+      data-pagination="true"
+      data-height="400"
+      data-toggle="table"
+      data-page-list="[5,10, 25, 50, 100, ALL]"
+      class='table borderless'
+      data-filter-control="true"
+           data-filter-show-clear="true" >
+     
+   <thead>
+   <tr>
+	   <th data-field="select" data-checkbox="true" >Select</th>
+       <th data-field="status" data-formatter="formatStatus" data-field="id" data-align="right" data-sortable="true">Status</th>
+		<th data-field="Agency"  data-formatter="formatAgency" data-field="id" data-align="right" data-sortable="true" >Agency</th>
+       <th data-field="country"  data-formatter="formatCountry" data-field="id" data-align="right" data-sortable="true"  >Ticketing Country</th>
+       <th data-field="gds" data-formatter="formatGDS" data-field="id" data-align="right" data-sortable="true">GDS</th>
+       <th data-field="arciata"   data-formatter="formatARC" data-field="id" data-align="right" data-sortable="true">ARC/IATA</th>
+       <th data-field="acc" data-formatter="formatCorporateID" data-field="id" data-align="right" data-sortable="true">Account Code/Corporate ID</th>
+       - 
+       <th data-field="pcc" data-formatter="formatPcc" data-field="id" data-align="right" data-sortable="true"  data-filter-control="true"> PCC</th>
+     
+       
+    </tr>
+    </thead>
+    </table>
+</div>
+<script>
+var data1=[
+    {
+        "country": "United Kingdom",
+        "gds": "Amadeus",
+        "arciata": "87654321",
+        "acc": "ABC01",
+        "pcc": "T0Z",
+        "status": "Activation Pending",
+        "agcyNme": "Agency ABC",
+        "tkyDsgtrCd": "XX68G"
+    },
+    {
+        "country": "Egypt",
+        "gds": "Sabre",
+        "arciata": "87654321",
+        "acc": "ABC01",
+        "pcc": "MTT",
+        "status": "Active",
+        "agcyNme": "ABN AMRO Holdings USA LLC",
+        "tkyDsgtrCd": "XXN92"
+    },
+    {
+        "country": "Equatorial Guinea",
+        "gds": "Axess",
+        "arciata": "87654321",
+        "acc": "ABC01",
+        "pcc": "MTT",
+        "status": "Active",
+        "agcyNme": "3M",
+        "tkyDsgtrCd": "XXG48"
+    },
+    {
+        "country": "Eritrea",
+        "gds": "Amadeus",
+        "arciata": "87654321",
+        "acc": "ABC01",
+        "pcc": "T0Z",
+        "status": "Active",
+        "agcyNme": "21st Century Fox, Inc",
+        "tkyDsgtrCd": "XXN73"
+    },
+    {
+        "country": "Mexico",
+        "gds": "Sabre",
+        "arciata": "87654321",
+        "acc": "ABC01",
+        "pcc": "T0Z",
+        "status": "Active",
+        "agcyNme": "Agency ABC",
+        "tkyDsgtrCd": "XX68G"
+    },
+    {
+        "country": "Canada",
+        "gds": "Worldspan",
+        "arciata": "87654321",
+        "acc": "ABC01",
+        "pcc": "MTT",
+        "status": "Active",
+        "agcyNme": "ABB",
+        "tkyDsgtrCd": "XX35W"
+    }
+];
+  $('#table').bootstrapTable({
+      data: data1
+  });
+  function formatStatus(value,row,index){
+	   return ' <input type="text" class="form-control" value="'+value+'"">';
+	}
+  
+
+  function formatARC(value,row,index){
+      return '<input data-id="' + row.id + '" value="' + value+ '">';
+  }   
+
+  function formatCorporateID(value,row,index){
+      return '<input data-id="' + row.id + '" value="' + value+ '">';
+  }  
+  function formatCountry(value,row,index){
+      return  '<select  class="selectpicker" data-live-search="true" > <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
+  }
+  function formatGDS(value,row,index){
+      return  '<select  class="selectpicker" data-live-search="true"> <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
+  }
+  function formatPcc(value,row,index){
+      return '<input data-id="' + row.id + '" value="' + value+ '">';
+  } 
+  function formatSelect(value,row,index){
+  	   return '<select  class="selectpicker" id="'+row.stargazers_count+'" data-live-search="true" data-live-search-style="begins" title="a"> <option value="hotdog_pack" >H</option> <option value="Burger_pack" data-tokens="pizza">e</option></select>';
+  	}
+   function formatAgency(value,row,index){
+  	   return 'Agency abc';
+  	//return ' <input type="text" class="form-control" >';
+  	} 
+  function formatStatus(value,row,index){
+  	   return ' <input type="text" class="form-control" value="'+value+'"">';
+  	}
+  
+</script>
+</body>
+
+</html>
