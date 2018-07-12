@@ -921,7 +921,10 @@ var data1=[
     }
 ];
   $('#table').bootstrapTable({
-      data: data1
+      data: data1,
+      onPageChange: function (number, size ) {
+         alert("refresh the bootstrap select ");     
+     }
   });
   function formatStatus(value,row,index){
 	   return ' <input type="text" class="form-control" value="'+value+'"">';
