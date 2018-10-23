@@ -1,964 +1,293 @@
+package com.staples.util;
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TICKETING LOCATION</title>
-  <meta charset="utf-8">
-<!--   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
- 
-  <link rel="stylesheet" href="css/bootstrap-select.css">
-  <script src="js/bootstrap-select.js"></script>
-  
-  <link rel="stylesheet" href="css/bootstrap-table.min.css">
-  <script src="js/bootstrap-table.min.js"></script> 
-	
-  <script src="js/bootstrap-table-filter-control.js"></script> -->
-	
-	 <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-  
-  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
- 
-  <link rel="stylesheet" href="css/bootstrap-select.css">
-  <script src="js/bootstrap-select.js"></script>
-  
-  <link rel="stylesheet" href="css/bootstrap-table.min.css">
-  <script src="js/bootstrap-table.min.js"></script> 
+public class DbUtill {
+
+	// static variable single_instance of type Singleton
+	private static Connection connection_inst = null;
+
+	// private constructor restricted to this class itself
+	private DbUtill() {
+
+	}
 	
-  <script src="js/bootstrap-table-filter-control.js"></script>
-<style>
-body {
-    font-family: 'Open Sans';
+	static{
+		try {
+			Class.forName("com.ibm.as400.access.AS400JDBCDriver");
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String url = "jdbc:as400://COSMOS;libraries=SFBASLIB";
+		String uname = "DEVRZS";
+		String pass = "Welcome123";
+
+		if (connection_inst == null) {
+			
+			try {
+				connection_inst = DriverManager.getConnection(url, uname, pass);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}  
+	}
+
+	// static method to create instance of Singleton class
+	public static Connection getConnection() throws SQLException, ClassNotFoundException {
+		
+			return connection_inst;
+		 
+
+	}
 }
-.bootstrap-select > .dropdown-toggle {
-    width: 82%;
-}
-</style>
-</head>
-
-<body>
-  <div>
-    <div class="page-header">
-      <div class="container">
-        <h3>TICKETING LOCATION PORTAL</h3>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row company-details">
-        <div class="col-sm-2" id="company-name">
-          <label>Company Name</label>
-          </br>
-           <select class="selectpicker" data-live-search="true"  class="form-control" id="comp_name" title="select a Company" >
-              <option value="Select a Company">Select a Company</option> 
-          </select>
-          
-        </div>
-        <div class="col-sm-2 ">
-          <label>Ticket Designator</label>
-          </br>
-          <span id="tkt_designator">xx123</span>
-        </div>
-        <div class="col-sm-1 ">
-          <label>Tour Code</label>
-          </br>
-          <span id="tour_code">MICRISO</span>
-        </div>
-       <div class="col-sm-3  ">
-          <label>Carriers with Filing Delegation</label>
-          </br>
-          <span id="filling_delegation">DL, AF, KL, VS, VA</span>
-        </div>
-        <div class="col-sm-3 ">
-          <label>Last Delta ATPCO Submission</label>
-          </br>
-          <span>April 20, 2018 10:30 am ET</span>
-        </div>
-        <div class="col-sm-1">
-          <button type="button" class="btn">FAQ</button>
-        </div>
-      </div>
-    </div>
-    <hr style="border-top: 3px solid #000;">
-	<div class="container">
-      <div>
-        <div class="row download-div">
-          <div class="col-sm-3">
-            <div class="dropdown">
-             <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">ACTIVE & PENDING
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li>
-                  <a href="#">OVERRIDE REQUESTS</a>
-                </li>
-                <li>
-                  <a href="#">RECENTLY DELETED</a>
-                </li>
-                <li>
-                  <a href="#">MANAGE AGENCIES</a>
-                </li>
-              </ul>
-            </div>
-
-         </div>
-          <div class="col-sm-2">
-
-          </div>
-
-          <div class="col-sm-7 download-section">
-		  <div class="rcon">
-            <div class="col-sm-5">
-              <a href="#link">Download Ticketing Locations</a>
-            </div>
-            <div class="col-sm-3">
-              <a href="#link">Download Template</a>
-            </div>
-            <div class="col-sm-2">
-              <a href="#link">Upload File</a>
-            </div>
-            <div class="col-sm-2">
-              <button type="button" class="btn">Choose File</button>
-            </div>
-          </div>
-		  </div>
-
-        </div>
-        <div class="row margin-top-10">
-          <div class="col-sm-10"></div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Edit</button>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Save</button>
-          </div>
-        </div>
-
-        <div class="row margin-top-10">
-          <div class="col-sm-7">
-              <label><span id="count"></span> Ticketing Locations</label>
-          </div>
-          <div class="col-sm-2 pd-top-5">
-              <a href="#link" style="float:right; color: #000">Clear Filters</a>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Delete</button>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Clone</button>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Add</button>
-          </div>
-        </div>
-
-  <table id="table"
-      data-show-columns="true"
-      data-toggle="table"
-      data-detail-view="true"
-      data-minimum-count-columns="2"
-      data-pagination="true"
-      data-id-field="id"
-      data-page-list="[5,10, 25, 50, 100, ALL]"
-      data-response-handler="responseHandler"
-       data-filter-control="true" 
-       class='table borderless'>
-     
-   <thead>
-   <tr>
-	   <th data-field="select" data-checkbox="true" >Select</th>
-       <th data-field="status" data-formatter="formatStatus" data-field="id" data-align="right" data-sortable="true">Status</th>
-		<th data-field="Agency"  data-formatter="formatAgency" data-field="id" data-align="right" data-sortable="true" >Agency</th>
-       <th data-field="country"  data-formatter="formatCountry" data-field="id" data-align="right" data-sortable="true"  >Ticketing Country</th>
-       <th data-field="gds" data-formatter="formatGDS" data-field="id" data-align="right" data-sortable="true">GDS</th>
-       <th data-field="arciata"   data-formatter="formatARC" data-field="id" data-align="right" data-sortable="true">ARC/IATA</th>
-       <th data-field="acc" data-formatter="formatCorporateID" data-field="id" data-align="right" data-sortable="true">Account Code/Corporate ID</th><!-- 
-       <th data-field="pcc" data-formatter="formatPcc" data-field="id" data-align="right" data-sortable="true"  data-filter-control="true"> PCC</th>
-    -->
-       <th data-field="pcc"   data-field="id"    data-filter-control="true" > PCC</th>
-    </tr>
-    </thead>
-</table>
-</div>
-    
-</body>
-<script>
 
 
-var data =null;
+package com.staples.springboot.controller;
 
-$(document).ready(function(){
 
-    $.ajax({
-			  method: "GET",
-			   //url: "http://localhost:8889/CorpCntr/1",
-			  url:"http://prbd1.delta.com:17063/salesapi/Corporation/All",
-			  data: {},
-			  success: function(jsonData) {
-		 // alert(JSON.stringify(jsonData));
-		        var items="";
-                //alert(jsonData.length);
-                for (var i = 0; i < jsonData.length; i++) {
-                    //appenddata1 += "<option value = '" + jsonData[i].SHORT_NAME + " '>" + jsonData1[i].FULL_NAME + " </option>";
-                    items+="<option value='"+jsonData[i].ticket_DESIGNATOR +"'>"+jsonData[i].name +"</option>";
-                     //alert(items);
-                     }
-                
-			   $("#comp_name").html(items);
-			   $('#comp_name').selectpicker('refresh');
-			   
-			   
-	 		  },
-	        	error: function() {
- 		 }
-		}); 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-    $("#comp_name").change(function() {
-       
-        var id= $('option:selected', this).val();
-        //alert("http://prbd1.delta.com:17063/salesapi/CorpCntr/find/XM94E"+id );
-        $.ajax({
-			  method: "GET",
-			 
-			  url: "http://prbd1.delta.com:17063/salesapi/CorpCntr/find/"+id,
-			  data: {},
-			  success: function(jsonData) {
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.staples.util.DbUtill;
+@RestController
+class SurveyController {
+
+	/*
+	 * @Autowired DataService dataService;
+	 */
+
+	@GetMapping(value = "/FutureorderByFcData", produces = "application/json")
+	public ArrayList getorderByFcData() throws Exception {
+
+		String query = "select orploc, count(*)from SF028SLIB.sfordr where (ORORD#,ORLINK,ORSHP#)     \r\n"
+				+ " in (select                                                         \r\n"
+				+ "odord#,odlink,odshp# from SF028SLIB.sfordd where ODSKMA in ('CS','ST') except \r\n"
+				+ "select odord#,odlink,odshp# from SF065DLIB.sfordd where ODDROP = ' ' and      \r\n"
+				+ "ODSPEC = ' ' and ODSKMA in ('US','TP','IM','SR','AZ') and ODWOR# =  \r\n"
+				+ "' ' ) and ORPSTA = 'AVL'        \r\n" +
+				"group by orploc                                                     \r\n" + "order by orploc";
+		
+		String wlocQry = "select wwloc# from SF028SLIB.sfwhse";
+		Connection con = DbUtill.getConnection();
+		Statement st = con.createStatement();
+		ResultSet rs = st.executeQuery(query);
+
+		Statement stwloc = con.createStatement();
+		ResultSet wlocRs = stwloc.executeQuery(wlocQry);
+
+		String userData;
+
+		ArrayList list = new ArrayList();
+
+		while (rs.next()) {
+
+			Map hm = new LinkedHashMap();
+			wlocRs.next();
+			hm.put("FC", wlocRs.getInt(1));
+
+			hm.put("Stock_Count", rs.getInt(1));
+			hm.put("wl_count", rs.getInt(2));
+
+			list.add(hm);
+
+		}
+
+		st.close();
+
+		return list;
+	}
+
+	public ResultSet getResultset(String query) throws SQLException, ClassNotFoundException {
+        
+		Connection connection = null;
+		connection = DbUtill.getConnection();
+		Statement stmt = connection.createStatement();
+		ResultSet resultSet = stmt.executeQuery(query);
+		return resultSet;
+	}
+	@GetMapping(value = "/orderByFc", produces = "application/json")
+	
+	public List<Map<String, Integer>> getorderByFcDataAVL() throws Exception {
+		ResultSet fc = this.getResultset("SELECT ORPLOC, count(*) FROM SF028SLIB.sfordr WHERE ORPSTA = 'AVL' GROUP BY ORPLOC ORDER BY ORPLOC");
+
+		List<Map<String, Integer>> finalList = new ArrayList<>();
+
+		while (fc.next()) {
+			// temp
+			ResultSet fc_avl = this.getResultset("SELECT ORPLOC, count(*) FROM SF028SLIB.sfordr WHERE ORPSTA = 'AVL' GROUP BY ORPLOC ORDER BY ORPLOC");
+			ResultSet fc_dst = this.getResultset("SELECT ORPLOC, count(*) FROM SF028SLIB.sfordr WHERE ORPSTA = 'DST' GROUP BY ORPLOC ORDER BY ORPLOC");
+			ResultSet fc_trd = this.getResultset("SELECT ORPLOC, count(*) FROM SF028SLIB.sfordr WHERE  ORPSTA = 'TRD' GROUP BY ORPLOC ORDER BY ORPLOC");
+
+			Integer fc_value = fc.getInt(1);
+			Map<String, Integer> map1 = new LinkedHashMap<>();
+			map1.put("FC", fc_value);
+			map1.put("AVL", 0);
+			map1.put("DST", 0);
+			map1.put("TRD", 0);
+			// avl
+			while (fc_avl.next()) {
+				if (fc_value == fc_avl.getInt(1)) {
+					map1.put("AVL", fc_avl.getInt(2));
+					break;
+
+				}
+			}
+			// dst
+			while (fc_dst.next()) {
+				if (fc_value == fc_dst.getInt(1)) {
+					map1.put("DST", fc_dst.getInt(2));
+					break;
+				}
+			}
+
+			// trd
+			while (fc_trd.next()) {
+				if (fc_value == fc_trd.getInt(1)) {
+					map1.put("TRD", fc_trd.getInt(2));
+					break;
+				}
+			}
+			// add final map to list
+			finalList.add(map1);
+
+		}
+
+		return finalList;
+	}
+
+		/*
+		 * String query = "SELECT ORPLOC, count(*) FROM SF028SLIB.sfordr WHERE \n" +
+		 * "ORPSTA = 'AVL' GROUP BY ORPLOC ORDER BY ORPLOC  \n"; Connection con =
+		 * DbUtill.getConnection();
+		 * 
+		 * Statement avlStmt = con.createStatement(); ResultSet avlRs =
+		 * avlStmt.executeQuery(query);
+		 * 
+		 * ArrayList list = new ArrayList();
+		 * 
+		 * while (avlRs.next()) { Map hm = new LinkedHashMap(); hm.put("FC",
+		 * avlRs.getInt(1)); hm.put("AVL", avlRs.getInt(2));
+		 * 
+		 * list.add(hm); }
+		 * 
+		 * return list;
+		 */
+		/**/
+		@GetMapping(value = "/productionDataMonitering", produces = "application/json")
+		public Map<String,Integer> getproductiondata() throws Exception {
+			//production data
+			String cuorquery = "select count(*) from sf028slib.sfordh";
+			String avorquery = "select ((count(*))/10) from sf028slib.sfordh";
+			String culiquery = "select count(*) from sf028slib.sfordd";
+			String avliquery = "select ((count(*))/10) from sf028slib.sfordd";
+			String cudoquery = "select sum( OHNTO$ ) from sf028slib.sfordh";
+			String avdoquery = "select (sum( OHNTO$ )/10) from sf028slib.sfordh";
+			//Weekly Comparision
+			String lwdorquery = "select sum( OHNTO$ ) from sf028slib.sfordh";
+			String lwdoquery = "select sum( OHNTO$ ) from sf028slib.sfordh";
+			String cwdorquery = "select sum( OHNTO$ ) from sf028slib.sfordh";
+			String cwdoquery = "select sum( OHNTO$ ) from sf028slib.sfordh";
+			String lworrquery = "select count(*) from sf028slib.sfordh ";
+			String lworquery = "select count(*) from sf028slib.sfordh ";
+			String cworrquery = "select count(*) from sf028slib.sfordh ";
+			String cworquery = "select count(*) from sf028slib.sfordh ";
+
+			Connection DSTcon = DbUtill.getConnection();
+
+			Statement dstStmt = DSTcon.createStatement();
+			ResultSet prs = dstStmt.executeQuery(cuorquery);
+			prs.next();
+			
+			
+			//Map
+			Map<String,Integer> map=new LinkedHashMap<>();
+				map.put("CurrentOrder", prs.getInt(1));
+				prs=dstStmt.executeQuery(avorquery);
+				prs.next();
+				map.put("AverageOrder",prs.getInt(1) );
+				prs=dstStmt.executeQuery(culiquery);
+				prs.next();
+				map.put("CurrentLine", prs.getInt(1));
+				prs=dstStmt.executeQuery(avliquery);
+				prs.next();
+				map.put("AverageLine", prs.getInt(1));
+				prs=dstStmt.executeQuery(cudoquery);
+				prs.next();
+				map.put("CurrentDollers", prs.getInt(1));
+				prs=dstStmt.executeQuery(avdoquery);
+				prs.next();
+				map.put("AverageDollers", prs.getInt(1));
 				
-				 console.log(jsonData[0].ticket_DESIGNATOR);
-				 console.log(jsonData[0].filling_delegation);
-				   $("#tkt_designator").html(jsonData[0].ticket_DESIGNATOR); 
-				   $("#tour_code").html(jsonData[0].name); 
-				   $("#filling_delegation").html(jsonData[0].carrier_LIST);
-	 		  },
-	        	error: function() {
-   		 }
-		}); 
-        
-        $.ajax({
-        	  method: "GET",
-        	  url: "http://prbd1.delta.com:17063/salesapi/Location/find/"+id,
-        	  data: {},
-        	  success: function(jsonData) {
-        	             alert("grid ::"+JSON.stringify(jsonData));
-                        data=jsonData;
-                        //alert("data::"+JSON.stringify(data));
-                        $('#table').bootstrapTable({
-                            data: data,
-                            onPostBody: function () {
-                        		 $('.selectpicker').selectpicker('refresh');
-                             }
-                        });
-                        $('#count').html(data.length);
-        		  },
-            	error: function() {
-        	 }
-        });  
-    });
+				//Weekly comparision
+				prs=dstStmt.executeQuery(lwdorquery);
+				prs.next();				
+				map.put("LastWeekDollarsRR", prs.getInt(1));
+				prs=dstStmt.executeQuery(lwdoquery);
+				prs.next();
+				map.put("LastWeekDollars",prs.getInt(1) );
+				prs=dstStmt.executeQuery(cwdorquery);
+				prs.next();
+				map.put("currentWeekDollarsRR", prs.getInt(1));
+				prs=dstStmt.executeQuery(cwdoquery);
+				prs.next();
+				map.put("currentWeekDollars", prs.getInt(1));
+				prs=dstStmt.executeQuery(lworrquery);
+				prs.next();
+				map.put("LastWeekOrderRR", prs.getInt(1));
+				prs=dstStmt.executeQuery(lworquery);
+				prs.next();
+				map.put("LastWeekOrder", prs.getInt(1));
+				prs=dstStmt.executeQuery(cworrquery);
+				prs.next();
+				map.put("currentWeekOrderRR", prs.getInt(1));
+				prs=dstStmt.executeQuery(cworquery);
+				prs.next();
+				map.put("currentWeekOrder", prs.getInt(1));
+				
+		
+				/*/list of pairs
+				List<Map<String,Integer>> list2=new ArrayList<>();
+				
+				//fetch data from map
+				Set<String> keyMap=map.keySet();
+				Iterator<String> itr=keyMap.iterator();
+				//while(itr.hasNext()) {
+					Map<String,Integer> map2=new HashMap<>();
+					//1st pair
+					String key=itr.next();
+					Integer value=map.get(key);
+					map2.put(key, value);
+					//2nd pair
+					//key=itr.next();
+					//value=map.get(key);
+					//map2.put(key, value);
+					
+					list2.add(map2);
+					
+				}*/
+				//close connection
+				DSTcon.close();
+			return map;
 
-  
-    
-});
 
-function formatARC(value,row,index){
-return '<input data-id="' + row.id + '" value="' + value+ '">';
-}   
-
-function formatCorporateID(value,row,index){
-    return '<input data-id="' + row.id + '" value="' + value+ '">';
-}  
-function formatCountry(value,row,index){
-    return  '<select  class="selectpicker" data-live-search="true" > <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
-}
-function formatGDS(value,row,index){
-    return  '<select  class="selectpicker" data-live-search="true"> <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
-}
-function formatPcc(value,row,index){
-    return '<input data-id="' + row.id + '" value="' + value+ '">';
-} 
-function formatSelect(value,row,index){
-	   return '<select  class="selectpicker" id="'+row.stargazers_count+'" data-live-search="true" data-live-search-style="begins" title="a"> <option value="hotdog_pack" >H</option> <option value="Burger_pack" data-tokens="pizza">e</option></select>';
+		}
 	}
- function formatAgency(value,row,index){
-	   return 'Agency abc';
-	//return ' <input type="text" class="form-control" >';
-	} 
-function formatStatus(value,row,index){
-	   return ' <input type="text" class="form-control" value="'+value+'"">';
-	}
-</script>
-</html>
-
-
-=-==========================================================================================
-index2
-========================================================
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TICKETING LOCATION</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-
-  
-  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
- 
-  <link rel="stylesheet" href="css/bootstrap-select.css">
-  <script src="js/bootstrap-select.js"></script>
-  
-  <link rel="stylesheet" href="css/bootstrap-table.min.css">
-  <script src="js/bootstrap-table.min.js"></script> 
-	
-  <script src="js/bootstrap-table-filter-control.js"></script>
-	
-<style>
-body {
-    font-family: 'Open Sans';
-}
-.bootstrap-select > .dropdown-toggle {
-    width: 82%;
-}
-</style>
-</head>
-
-<body>
-  <div>
-    <div class="page-header">
-      <div class="container">
-        <h3>TICKETING LOCATION PORTAL</h3>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row company-details">
-        <div class="col-sm-2" id="company-name">
-          <label>Company Name</label>
-          </br>
-           <select class="selectpicker" data-live-search="true"  class="form-control" id="comp_name" title="select a Company" >
-              <option value="Select a Company">Select a Company</option> 
-          </select>
-          
-        </div>
-        <div class="col-sm-2 ">
-          <label>Ticket Designator</label>
-          </br>
-          <span id="tkt_designator">xx123</span>
-        </div>
-        <div class="col-sm-2 ">
-          <label>Tour Code</label>
-          </br>
-          <span id="tour_code">MICRISO</span>
-        </div>
-       
-        <div class="col-sm-3 ">
-          <label>Last Delta ATPCO Submission</label>
-          </br>
-          <span>April 20, 2018 10:30 am ET</span>
-        </div>
-        <div class="col-sm-1">
-          <button type="button" class="btn">FAQ</button>
-        </div>
-      </div>
-    </div>
-    <hr style="border-top: 3px solid #000;">
-	<div class="container">
-      <div>
-        <div class="row download-div">
-          <div class="col-sm-3">
-            <div class="dropdown">
-             <button class="btn dropdown-toggle" type="button" data-toggle="dropdown">ACTIVE & PENDING
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li>
-                  <a href="#">OVERRIDE REQUESTS</a>
-                </li>
-                <li>
-                  <a href="#">RECENTLY DELETED</a>
-                </li>
-                <li>
-                  <a href="#">MANAGE AGENCIES</a>
-                </li>
-              </ul>
-            </div>
-
-         </div>
-          <div class="col-sm-2">
-
-          </div>
-
-          <div class="col-sm-7 download-section">
-		  <div class="rcon">
-            <div class="col-sm-5">
-              <a href="#link">Download Ticketing Locations</a>
-            </div>
-            <div class="col-sm-3">
-              <a href="#link">Download Template</a>
-            </div>
-            <div class="col-sm-2">
-              <a href="#link">Upload File</a>
-            </div>
-            <div class="col-sm-2">
-              <button type="button" class="btn">Choose File</button>
-            </div>
-          </div>
-		  </div>
-
-        </div>
-        <div class="row margin-top-10">
-          <div class="col-sm-10"></div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Edit</button>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Save</button>
-          </div>
-        </div>
-
-        <div class="row margin-top-10">
-          <div class="col-sm-7">
-              <label><span id="count"></span> Ticketing Locations</label>
-          </div>
-          <div class="col-sm-2 pd-top-5">
-              <a href="#link" style="float:right; color: #000">Clear Filters</a>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Delete</button>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Clone</button>
-          </div>
-          <div class="col-sm-1">
-            <button type="button" class="btn btn-wdth-123">Add</button>
-          </div>
-        </div>
-
-  <table id="table"
-              
-      data-detail-view="true"
-      data-minimum-count-columns="2"
-      data-pagination="true"
-      data-height="400"
-      data-toggle="table"
-      data-page-list="[5,10, 25, 50, 100, ALL]"
-      class='table borderless'>
-     
-   <thead>
-   <tr>
-	   <th data-field="select" data-checkbox="true" >Select</th>
-       <th data-field="status" data-formatter="formatStatus" data-field="id" data-align="right" data-sortable="true">Status</th>
-		<th data-field="Agency"  data-formatter="formatAgency" data-field="id" data-align="right" data-sortable="true" >Agency</th>
-       <th data-field="country"  data-formatter="formatCountry" data-field="id" data-align="right" data-sortable="true"  >Ticketing Country</th>
-       <th data-field="gds" data-formatter="formatGDS" data-field="id" data-align="right" data-sortable="true">GDS</th>
-       <th data-field="arciata"   data-formatter="formatARC" data-field="id" data-align="right" data-sortable="true">ARC/IATA</th>
-       <th data-field="acc" data-formatter="formatCorporateID" data-field="id" data-align="right" data-sortable="true">Account Code/Corporate ID</th>
-       - 
-       <th data-field="pcc" data-formatter="formatPcc" data-field="id" data-align="right" data-sortable="true"  data-filter-control="true"> PCC</th>
-     
-       <th data-field="pcc"   data-field="id"     > PCC</th>
-    </tr>
-    </thead>
-</table>
-</div>
-    
-</body>
-<script>
-
-
-var data =null;
- 
-
- 
-$(document).ready(function(){
-	    $('#table').bootstrapTable({
-         data: data,
-        onPostBody: function () {
-		 $('.selectpicker').selectpicker('refresh');
-     }
-}); 
-	   // $('#table').bootstrapTable( 'resetView' , {height: 200} );
-	
-        $.ajax({
- 			  method: "GET",
- 			   //url: "http://localhost:8889/CorpCntr/1",
- 			  url:"http://prbd1.delta.com:17063/salesapi/Corporation/All",
- 			  data: {},
- 			  success: function(jsonData) {
-			 // alert(JSON.stringify(jsonData));
-			        var items="";
-                    //alert(jsonData.length);
-                    for (var i = 0; i < jsonData.length; i++) {
-                        //appenddata1 += "<option value = '" + jsonData[i].SHORT_NAME + " '>" + jsonData1[i].FULL_NAME + " </option>";
-                        items+="<option value='"+jsonData[i].ticket_DESIGNATOR +"'>"+jsonData[i].name +"</option>";
-                         //alert(items);
-                         }
-                    
-				   $("#comp_name").html(items);
-				   $('#comp_name').selectpicker('refresh');
-				   
-				   
-  	 		  },
-  	        	error: function() {
-     		 }
- 		}); 
-
-        $("#comp_name").change(function() {
-           
-            var id= $('option:selected', this).val();
-            //alert("http://prbd1.delta.com:17063/salesapi/CorpCntr/find/XM94E"+id );
-            $.ajax({
-   			  method: "GET",
-   			 
-   			  url: "http://prbd1.delta.com:17063/salesapi/CorpCntr/find/"+id,
-   			  data: {},
-   			  success: function(jsonData) {
-   				
-   				 console.log(jsonData[0].ticket_DESIGNATOR);
-   				 console.log(jsonData[0].filling_delegation);
-  				   $("#tkt_designator").html(jsonData[0].ticket_DESIGNATOR); 
-  				   $("#tour_code").html(jsonData[0].name); 
-  				   $("#filing_delegation").html(jsonData[0].carrier_LIST);
-    	 		  },
-    	        	error: function() {
-       		 }
-   		}); 
-            
-            $.ajax({
-            	  method: "GET",
-            	  url: "http://prbd1.delta.com:17063/salesapi/Location/find/"+id,
-            	  data: {},
-            	  success: function(jsonData) {
-            	             alert("grid ::"+JSON.stringify(jsonData));
-                            data=jsonData;
-                            //alert("data::"+JSON.stringify(data));
-                            
-                            $('#table').bootstrapTable('load', data);
-                            $('.selectpicker').selectpicker('refresh');
-                            $('#count').html(data.length);
-            		  },
-                	error: function() {
-            	 }
-            });  
-        });
-
-      
-        
-});
-
-function formatARC(value,row,index){
-    return '<input data-id="' + row.id + '" value="' + value+ '">';
-}   
-
-function formatCorporateID(value,row,index){
-    return '<input data-id="' + row.id + '" value="' + value+ '">';
-}  
-function formatCountry(value,row,index){
-    return  '<select  class="selectpicker" data-live-search="true" > <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
-}
-function formatGDS(value,row,index){
-    return  '<select  class="selectpicker" data-live-search="true"> <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
-}
-function formatPcc(value,row,index){
-    return '<input data-id="' + row.id + '" value="' + value+ '">';
-} 
-function formatSelect(value,row,index){
-	   return '<select  class="selectpicker" id="'+row.stargazers_count+'" data-live-search="true" data-live-search-style="begins" title="a"> <option value="hotdog_pack" >H</option> <option value="Burger_pack" data-tokens="pizza">e</option></select>';
-	}
- function formatAgency(value,row,index){
-	   return 'Agency abc';
-	//return ' <input type="text" class="form-control" >';
-	} 
-function formatStatus(value,row,index){
-	   return ' <input type="text" class="form-control" value="'+value+'"">';
-	}
-</script>
-</html>
-==========================================
-filter
-=======================
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TICKETING LOCATION</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-
-  
-  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
- 
-  <link rel="stylesheet" href="css/bootstrap-select.css">
-  <script src="js/bootstrap-select.js"></script>
-  
-  <link rel="stylesheet" href="css/bootstrap-table.min.css">
-  <script src="js/bootstrap-table.min.js"></script> 
-	
-  <script src="js/bootstrap-table-filter-control.js"></script>
-	
-</head>
-<body>
-<div class="container">
-    <h1>Filter Control</h1>
-    <table id="table"
-           data-toggle="table"
-           data-filter-control="true"
-           data-filter-show-clear="true"
-           data-show-columns="true"
-      data-toggle="table"
-      data-detail-view="true"
-      data-minimum-count-columns="2"
-      data-pagination="true"
-      data-id-field="id"
-      data-page-list="[5,10, 25, 50, 100, ALL]"
-      data-response-handler="responseHandler"
-           >
-        <thead>
-        <tr>
-            <th data-field="id">ID</th>
-            <th data-field="name" data-filter-control="input" data-formatter="formatStatus"  data-sortable="true">Item Name</th>
-            <th data-field="price" >Item Price</th>
-        </tr>
-        </thead>
-    </table>
-</div>
-<script>
-  var data1=[ {
-        "id": 0,
-        "name": "Item 0",
-        "price": "$0",
-        "amount": 3 },
-    {
-        "id": 1,
-        "name": "Item 1",
-        "price": "$1",
-        "amount": 4
-    },
-    {
-        "id": 2,
-        "name": "Item 2",
-        "price": "$2",
-        "amount": 8
-    },
-    {
-        "id": 3,
-        "name": "Item 3",
-        "price": "$3",
-        "amount": 2
-    },
-    {
-        "id": 4,
-        "name": "Item 4",
-        "price": "$4",
-        "amount": 90
-    },
-    {
-        "id": 5,
-        "name": "Item 5",
-        "price": "$5",
-        "amount": 2
-    },
-    {
-        "id": 6,
-        "name": "Item 6",
-        "price": "$6",
-        "amount": 3
-    },
-    {
-        "id": 7,
-        "name": "Item 7",
-        "price": "$7",
-        "amount": 7
-    },
-    {
-        "id": 8,
-        "name": "Item 8",
-        "price": "$8",
-        "amount": 39
-    },
-    {
-        "id": 9,
-        "name": "Item 9",
-        "price": "$9",
-        "amount": 78
-    },
-    {
-        "id": 10,
-        "name": "Item 10",
-        "price": "$10",
-        "amount": 30
-    },
-    {
-        "id": 11,
-        "name": "Item 11",
-        "price": "$11",
-        "amount": 32
-    },
-    {
-        "id": 12,
-        "name": "Item 12",
-        "price": "$12",
-        "amount": 12
-    },
-    {
-        "id": 13,
-        "name": "Item 13",
-        "price": "$13",
-        "amount": 76
-    },
-    {
-        "id": 14,
-        "name": "Item 14",
-        "price": "$14",
-        "amount": 10
-    },
-    {
-        "id": 15,
-        "name": "Item 15",
-        "price": "$15",
-        "amount": 9
-    },
-    {
-        "id": 16,
-        "name": "Item 16",
-        "price": "$16",
-        "amount": 8
-    },
-    {
-        "id": 17,
-        "name": "Item 17",
-        "price": "$17",
-        "amount": 1
-    },
-    {
-        "id": 18,
-        "name": "Item 18",
-        "price": "$18",
-        "amount": 99
-    },
-    {
-        "id": 19,
-        "name": "Item 19",
-        "price": "$19",
-        "amount": 100
-    },
-    {
-        "id": 20,
-        "name": "Item 20",
-        "price": "$20",
-        "amount": 109
-    }
-];
-  $('#table').bootstrapTable({
-      data: data1
-  });
-  function formatStatus(value,row,index){
-	   return ' <input type="text" class="form-control" value="'+value+'"">';
-	}
-</script>
-</body>
-
-</html>
-================================
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TICKETING LOCATION</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/custom.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js"></script>
-
-  
-  <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
- 
-  <link rel="stylesheet" href="css/bootstrap-select.css">
-  <script src="js/bootstrap-select.js"></script>
-  
-  <link rel="stylesheet" href="css/bootstrap-table.min.css">
-  <script src="js/bootstrap-table.min.js"></script> 
-	
-  <script src="js/bootstrap-table-filter-control.js"></script>
-	
-</head>
-<body>
-<div class="container">
-    <h1>Filter Control</h1>
-    <table id="table"
-              
-      data-detail-view="true"
-      data-minimum-count-columns="2"
-      data-pagination="true"
-      data-height="400"
-      data-toggle="table"
-      data-page-list="[5,10, 25, 50, 100, ALL]"
-      class='table borderless'
-      data-filter-control="true"
-           data-filter-show-clear="true" >
-     
-   <thead>
-   <tr>
-	   <th data-field="select" data-checkbox="true" >Select</th>
-       <th data-field="status" data-formatter="formatStatus" data-field="id" data-align="right" data-sortable="true">Status</th>
-		<th data-field="Agency"  data-formatter="formatAgency" data-field="id" data-align="right" data-sortable="true" >Agency</th>
-       <th data-field="country"  data-formatter="formatCountry" data-field="id" data-align="right" data-sortable="true"  >Ticketing Country</th>
-       <th data-field="gds" data-formatter="formatGDS" data-field="id" data-align="right" data-sortable="true">GDS</th>
-       <th data-field="arciata"   data-formatter="formatARC" data-field="id" data-align="right" data-sortable="true">ARC/IATA</th>
-       <th data-field="acc" data-formatter="formatCorporateID" data-field="id" data-align="right" data-sortable="true">Account Code/Corporate ID</th>
-       - 
-       <th data-field="pcc" data-formatter="formatPcc" data-field="id" data-align="right" data-sortable="true"  data-filter-control="true"> PCC</th>
-     
-       
-    </tr>
-    </thead>
-    </table>
-</div>
-<script>
-var data1=[
-    {
-        "country": "United Kingdom",
-        "gds": "Amadeus",
-        "arciata": "87654321",
-        "acc": "ABC01",
-        "pcc": "T0Z",
-        "status": "Activation Pending",
-        "agcyNme": "Agency ABC",
-        "tkyDsgtrCd": "XX68G"
-    },
-    {
-        "country": "Egypt",
-        "gds": "Sabre",
-        "arciata": "87654321",
-        "acc": "ABC01",
-        "pcc": "MTT",
-        "status": "Active",
-        "agcyNme": "ABN AMRO Holdings USA LLC",
-        "tkyDsgtrCd": "XXN92"
-    },
-    {
-        "country": "Equatorial Guinea",
-        "gds": "Axess",
-        "arciata": "87654321",
-        "acc": "ABC01",
-        "pcc": "MTT",
-        "status": "Active",
-        "agcyNme": "3M",
-        "tkyDsgtrCd": "XXG48"
-    },
-    {
-        "country": "Eritrea",
-        "gds": "Amadeus",
-        "arciata": "87654321",
-        "acc": "ABC01",
-        "pcc": "T0Z",
-        "status": "Active",
-        "agcyNme": "21st Century Fox, Inc",
-        "tkyDsgtrCd": "XXN73"
-    },
-    {
-        "country": "Mexico",
-        "gds": "Sabre",
-        "arciata": "87654321",
-        "acc": "ABC01",
-        "pcc": "T0Z",
-        "status": "Active",
-        "agcyNme": "Agency ABC",
-        "tkyDsgtrCd": "XX68G"
-    },
-    {
-        "country": "Canada",
-        "gds": "Worldspan",
-        "arciata": "87654321",
-        "acc": "ABC01",
-        "pcc": "MTT",
-        "status": "Active",
-        "agcyNme": "ABB",
-        "tkyDsgtrCd": "XX35W"
-    }
-];
-  $('#table').bootstrapTable({
-      data: data1,
-      onPageChange: function (number, size ) {
-         alert("refresh the bootstrap select ");     
-     }
-  });
-  function formatStatus(value,row,index){
-	   return ' <input type="text" class="form-control" value="'+value+'"">';
-	}
-  
-
-  function formatARC(value,row,index){
-      return '<input data-id="' + row.id + '" value="' + value+ '">';
-  }   
-
-  function formatCorporateID(value,row,index){
-      return '<input data-id="' + row.id + '" value="' + value+ '">';
-  }  
-  function formatCountry(value,row,index){
-      return  '<select  class="selectpicker" data-live-search="true" > <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
-  }
-  function formatGDS(value,row,index){
-      return  '<select  class="selectpicker" data-live-search="true"> <option value="Burger_pack" data-tokens="pizza">'+value+'</option></select>';
-  }
-  function formatPcc(value,row,index){
-      return '<input data-id="' + row.id + '" value="' + value+ '">';
-  } 
-  function formatSelect(value,row,index){
-  	   return '<select  class="selectpicker" id="'+row.stargazers_count+'" data-live-search="true" data-live-search-style="begins" title="a"> <option value="hotdog_pack" >H</option> <option value="Burger_pack" data-tokens="pizza">e</option></select>';
-  	}
-   function formatAgency(value,row,index){
-  	   return 'Agency abc';
-  	//return ' <input type="text" class="form-control" >';
-  	} 
-  function formatStatus(value,row,index){
-  	   return ' <input type="text" class="form-control" value="'+value+'"">';
-  	}
-  
-</script>
-</body>
-
-</html>
